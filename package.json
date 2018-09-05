@@ -8,7 +8,5 @@
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "tiinytiny": "^0.2.7"
-  }
+  "dependencies": {}
 }
