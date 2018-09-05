@@ -5,6 +5,7 @@
 
     const defaultOptions = {
         __hashType: 'sha256',
+        __stringType: 'base64',
 
         /*
         * Create a hash
@@ -89,7 +90,7 @@
         }
 
         sort() {
-            // sort hash
+            // sort hash buffer
             tree.leaveKeys.sort(config.sortFunction);
         }
 
@@ -136,12 +137,12 @@
         return ((__isFunction(newValue)) ? newValue : oldValue);
     }
 
-    function __buffersRemoveItem(arr, item) {
-        return arr.filter(buf => !(buf.equals(item)));
+    function __buffersRemoveItem(array, item) {
+        return array.filter(buffer => !(buffer.equals(item)));
     }
 
-    function __bufferToString(buf, type = 'base64') {
-        return buf.toString(type);
+    function __bufferToString(buffer, type = config.__stringType) {
+        return buffer.toString(type);
     }
 
     function __calculateNextLevel() {
