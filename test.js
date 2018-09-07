@@ -84,5 +84,6 @@
     }
 
     // show root hash
-    console.log(`Root hash: ${tree.rootHash.toString('hex')}`);
+    console.log('\n--- Show root hash example: ---');
+    console.log(`* Root hash: ${tree.rootHash.toString('hex')}`);
 })();
