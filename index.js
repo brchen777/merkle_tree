@@ -5,7 +5,7 @@
 
     const defaultOptions = {
         __hashType: 'sha256',
-        __stringType: 'base64',
+        __stringType: 'base64url',
 
         /*
         * Create a hash
@@ -29,7 +29,7 @@
     Tree structure:
     {
         leaves: {
-            @Base64_string: @Buffer,
+            @Base64url_string: @Buffer,
             ...
         },
         leaveKeys: [@Hash_buffer, ...],
@@ -182,7 +182,10 @@
     }
 
     function __bufferToString(buffer, type = config.__stringType) {
-        return buffer.toString(type);
+        const string = (type === 'base64url')
+            ? buffer.toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '')
+            : buffer.toString(type);
+        return string;
     }
 
     function __calculateNextLevel() {
