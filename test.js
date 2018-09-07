@@ -15,12 +15,12 @@
     };
 
     /*
-    * @param {Buffer} val1
-    * @param {Buffer} val2
+    * @param {Buffer} value1
+    * @param {Buffer} value2
     */
-    let sortFunction = (val1, val2) => {
-        let valStr1 = val1.toString('hex');
-        let valStr2 = val2.toString('hex');
+    let sortFunction = (value1, value2) => {
+        let valStr1 = value1.toString('hex');
+        let valStr2 = value2.toString('hex');
 
         if (valStr1 > valStr2) {
             return 1;
@@ -40,11 +40,7 @@
         idx1: '111_data',
         idx2: '222_data',
         idx3: '333_data',
-        idx4: '444_data',
-        // idx5: '555_data',
-        // idx6: '666_data',
-        // idx7: '777_data',
-        // idx8: '888_data'
+        idx4: '444_data'
     };
 
     // convert string to buffer
@@ -70,7 +66,8 @@
     let findHash = hashFunction(dataBufferObj[findIdx]);
     let result = tree.findOne(findHash);
     console.log('\n--- Find one example: ---');
-    console.log(`* Index: ${findIdx}, Utf8_Data: ${result.toString('utf8')}`);
+    console.log(`* Index: ${findIdx}, Hex_Data: ${findHash.toString('hex')}`);
+    console.log(`* Find result: Utf8_Data: ${result.toString('utf8')}`);
     
     // delete example
     let delIdx = 'idx3';
@@ -85,4 +82,7 @@
     for(let i in levels) {
         console.log(`Level ${i}: ${levels[i]}`);
     }
+
+    // show root hash
+    console.log(`Root hash: ${tree.rootHash.toString('hex')}`);
 })();

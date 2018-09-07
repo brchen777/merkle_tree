@@ -24,10 +24,26 @@
     }
 
     let config = defaultOptions;
+
+    /*
+    Tree structure:
+    {
+        leaves: {
+            @Base64_string: @Buffer,
+            ...
+        },
+        leaveKeys: [@Hash_buffer, ...],
+        levels: [
+            [@Hash_buffer, ...],
+            ...
+        ],
+        isReady: @boolean
+    }
+    */
     let tree = {
-        leaves: {},             // { @base64_string: @buffer }
-        leaveKeys: [],          // [ @hash_buffer, ... ]
-        levels: [],             // [ [ @hash_buffer, ... ], ... ]
+        leaves: {},
+        leaveKeys: [],
+        levels: [],
         isReady: false
     };
 
@@ -38,6 +54,9 @@
             config.sortFunction = __assignFunction(config.sortFunction, options.sortFunction);
         }
 
+        /*
+        * @param {Buffer[]} values
+        */
         insert(values) {
             values = (__isArray(values)) ? values : [values];
 
@@ -51,6 +70,9 @@
             this.sort();
         }
 
+        /*
+        * @param {Buffer[]} indexes
+        */
         delete(indexes) {
             indexes = (__isArray(indexes)) ? indexes : [indexes];
 
@@ -63,6 +85,10 @@
             this.sort();
         }
 
+        /*
+        * @param {Buffer} index
+        * @return {any}
+        */
         findOne(index) {
             let hashStr = __bufferToString(index);
             return tree.leaves[hashStr];
@@ -89,23 +115,37 @@
             tree.isReady = true;
         }
 
+        /*
+        * sort hash buffer
+        */
         sort() {
-            // sort hash buffer
             tree.leaveKeys.sort(config.sortFunction);
         }
 
+        /*
+        * @return {boolean}
+        */
         getTreeStat() {
             return tree.isReady;
         }
 
+        /*
+        * @return {any{}}
+        */
         getTreeLeaves() {
             return tree.leaves;
         }
 
+        /*
+        * @return {number}
+        */
         getLeafCount() {
             return tree.leaveKeys.length;
         }
 
+        /*
+        * @return {Buffer[][]}
+        */
         getTreeLevels() {
             return tree.levels;
         }
