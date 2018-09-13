@@ -18,7 +18,7 @@
     * @param {Buffer} value1
     * @param {Buffer} value2
     */
-    let sortFunction = (value1, value2) => {
+    let compareFunction = (value1, value2) => {
         let valStr1 = value1.toString('hex');
         let valStr2 = value2.toString('hex');
 
@@ -33,7 +33,7 @@
         }
     };
 
-    const tree = new MerkleTree({ hashFunction, sortFunction });
+    const tree = new MerkleTree({ hashFunction, compareFunction });
 
     // string data
     let dataObj = {

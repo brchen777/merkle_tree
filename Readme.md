@@ -4,7 +4,7 @@
 
 ### How to use ###
 
-1. Define hash function and sort function (Optional)
+1. Define hash function and compare function (Optional)
     ```javascript
     /*
     * @param {Buffer} value
@@ -19,7 +19,7 @@
     * @param {Buffer} value1
     * @param {Buffer} value2
     */
-    let sortFunction = (value1, value2) => {
+    let compareFunction = (value1, value2) => {
         let valStr1 = value1.toString('hex');
         let valStr2 = value2.toString('hex');
 
@@ -41,10 +41,10 @@
     Option structure:
     {
         hashFunction: undefined | function, // Default = SHA256 hash function in crypto module
-        sortFunction: undefined | function  // Default = Buffer.compare
+        compareFunction: undefined | function  // Default = Buffer.compare
     }
     */
-    const tree = new MerkleTree({ hashFunction, sortFunction });
+    const tree = new MerkleTree({ hashFunction, compareFunction });
     ```
 
 3. Insert / delete leaf data

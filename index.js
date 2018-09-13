@@ -18,9 +18,9 @@
         },
 
         /*
-        * Sort hash
+        * Compare hash
         */
-        sortFunction: Buffer.compare
+        compareFunction: Buffer.compare
     }
 
     let config = defaultOptions;
@@ -49,9 +49,9 @@
 
     class MerkleTree {
         constructor(options = defaultOptions) {
-            // init hash and sort function
+            // init hash and compare function
             config.hashFunction = __assignFunction(config.hashFunction, options.hashFunction);
-            config.sortFunction = __assignFunction(config.sortFunction, options.sortFunction);
+            config.compareFunction = __assignFunction(config.compareFunction, options.compareFunction);
         }
 
         /*
@@ -116,10 +116,10 @@
         }
 
         /*
-        * sort hash buffer
+        * Sort hash buffer
         */
         sort() {
-            tree.leaveKeys.sort(config.sortFunction);
+            tree.leaveKeys.sort(config.compareFunction);
         }
 
         /*
