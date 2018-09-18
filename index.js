@@ -7,39 +7,34 @@
         __hashType: 'sha256',
         __stringType: 'base64url',
 
-        /*
-        * Create a hash
-        * @param {Buffer} value
-        * @return {Buffer}
-        */
+        /**
+         * Create a hash
+         * @param {Buffer} value
+         * @return {Buffer}
+         */
         hashFunction: function(value) {
             value = Buffer.from(value);
             return crypto.createHash(this.__hashType).update(value).digest();
         },
 
-        /*
-        * Compare hash
-        */
+        /**
+         * Compare hash
+         */
         compareFunction: Buffer.compare
     }
 
     let config = defaultOptions;
 
-    /*
-    Tree structure:
-    {
-        leaves: {
-            @Base64url_string: @Buffer,
-            ...
-        },
-        leaveKeys: [@Hash_buffer, ...],
-        levels: [
-            [@Hash_buffer, ...],
-            ...
-        ],
-        isReady: @boolean
-    }
-    */
+    /**
+     * @typedef {Object} tree
+     * @property {Object<string, Buffer>} leaves <Base64url_string, Buffer>
+     * @property {Buffer[]} leaveKeys Hash_buffer[ ]
+     * @property {Buffer[][]} levels Hash_buffer[ ][ ]
+     * @property {boolean} isReady
+     */
+    /**
+     * @type {tree}
+     */
     let tree = {
         leaves: {},
         leaveKeys: [],
@@ -54,9 +49,10 @@
             config.compareFunction = __assignFunction(config.compareFunction, options.compareFunction);
         }
 
-        /*
-        * @param {Buffer[]} values
-        */
+        /**
+         * Insert leaves
+         * @param {Buffer[]} values
+         */
         insert(values) {
             values = (__isArray(values)) ? values : [values];
 
@@ -70,9 +66,10 @@
             this.sort();
         }
 
-        /*
-        * @param {Buffer[]} indexes
-        */
+        /**
+         * Delete leaves
+         * @param {Buffer[]} indexes
+         */
         delete(indexes) {
             indexes = (__isArray(indexes)) ? indexes : [indexes];
 
@@ -85,15 +82,19 @@
             this.sort();
         }
 
-        /*
-        * @param {Buffer} index
-        * @return {any}
-        */
+        /**
+         * Find leaf data by index buffer
+         * @param {Buffer} index 
+         * @return {Buffer}
+         */
         findOne(index) {
             let hashStr = __bufferToString(index);
             return tree.leaves[hashStr];
         }
 
+        /**
+         * Reset tree structure
+         */
         resetTree() {
             tree = {
                 leaves: {},
@@ -103,6 +104,9 @@
             };
         }
 
+        /**
+         * Init tree structure
+         */
         makeTree() {
             tree.isReady = false;
             if (this.getLeafCount()) {
@@ -115,41 +119,47 @@
             tree.isReady = true;
         }
 
-        /*
-        * Sort hash buffer
-        */
+        /**
+         * Sort hash buffer
+         */
         sort() {
             tree.leaveKeys.sort(config.compareFunction);
         }
 
-        /*
-        * @return {boolean}
-        */
+        /**
+         * Get tree stat
+         * @return {boolean}
+         */
         getTreeStat() {
             return tree.isReady;
         }
 
-        /*
-        * @return {any{}}
-        */
+        /**
+         * Get all tree leaves
+         * @return {Object.<string, Buffer>}
+         */
         getTreeLeaves() {
             return tree.leaves;
         }
 
-        /*
-        * @return {number}
-        */
+        /**
+         * @function getLeafCount
+         * @return {number}
+         */
         getLeafCount() {
             return tree.leaveKeys.length;
         }
 
-        /*
-        * @return {Buffer[][]}
-        */
+        /**
+         * @return {Buffer[][]}
+         */
         getTreeLevels() {
             return tree.levels;
         }
 
+        /**
+         * @return {''|Buffer}
+         */
         get rootHash() {
             if (__isArray([tree.levels]) && __isArray(tree.levels[0])) {
                 return tree.levels[0][0] || '';

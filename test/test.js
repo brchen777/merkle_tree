@@ -1,23 +1,24 @@
 (() => {
     'use strict';
 
-    const MerkleTree = require('./index.js');
+    const MerkleTree = require('../index.js');
     const crypto = require('crypto');
     const hashType = 'md5';
 
-    /*
-    * @param {Buffer} value
-    * @return {Buffer}
-    */
+    /**
+     * @param {Buffer} value
+     * @return {Buffer}
+     */
     let hashFunction = (value) =>  {
         value = Buffer.from(value);
         return crypto.createHash(hashType).update(value).digest();
     };
 
-    /*
-    * @param {Buffer} value1
-    * @param {Buffer} value2
-    */
+    /**
+     * @param {Buffer} value1
+     * @param {Buffer} value2
+     * @return {1|-1|0}
+     */
     let compareFunction = (value1, value2) => {
         let valStr1 = value1.toString('hex');
         let valStr2 = value2.toString('hex');
@@ -33,7 +34,16 @@
         }
     };
 
-    const tree = new MerkleTree({ hashFunction, compareFunction });
+    /**
+     * @typedef {Object} options
+     * @property {Function} [hashFunction=] Default = SHA256 hash function in crypto module
+     * @property {Function} [compareFunction=] Default = Buffer.compare
+     */
+    /**
+     * @type {options}
+     */
+    let options = { hashFunction, compareFunction };
+    const tree = new MerkleTree(options);
 
     // string data
     let dataObj = {
@@ -60,6 +70,8 @@
     for(let i in levels) {
         console.log(`Level ${i}: ${levels[i]}`);
     }
+
+    tree.rootHash
 
     // find one example
     let findIdx = 'idx3';

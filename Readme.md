@@ -6,19 +6,20 @@
 
 1. Define hash function and compare function (Optional)
     ```javascript
-    /*
-    * @param {Buffer} value
-    * @return {Buffer}
-    */
+    /**
+     * @param {Buffer} value
+     * @return {Buffer}
+     */
     let hashFunction = (value) =>  {
         value = Buffer.from(value);
         return crypto.createHash(hashType).update(value).digest();
     };
 
-    /*
-    * @param {Buffer} value1
-    * @param {Buffer} value2
-    */
+    /**
+     * @param {Buffer} value1
+     * @param {Buffer} value2
+     * @return {1|-1|0}
+     */
     let compareFunction = (value1, value2) => {
         let valStr1 = value1.toString('hex');
         let valStr2 = value2.toString('hex');
@@ -37,14 +38,16 @@
 
 2. New a merkle tree object
     ```javascript
-    /*
-    Option structure:
-    {
-        hashFunction: undefined | function, // Default = SHA256 hash function in crypto module
-        compareFunction: undefined | function  // Default = Buffer.compare
-    }
-    */
-    const tree = new MerkleTree({ hashFunction, compareFunction });
+    /**
+     * @typedef {Object} options
+     * @property {Function} [hashFunction=] Default = SHA256 hash function in crypto module
+     * @property {Function} [compareFunction=] Default = Buffer.compare
+     */
+    /**
+     * @type {options}
+     */
+    let options = { hashFunction, compareFunction };
+    const tree = new MerkleTree(options);
     ```
 
 3. Insert / delete leaf data
@@ -92,7 +95,7 @@
 ### Build and Run ###
 
 * Run test (use node):
-    > node ./test.js
+    > node ./test/test.js
 
 * Run test (use npm):
     > npm run test
