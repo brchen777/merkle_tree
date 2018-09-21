@@ -71,8 +71,6 @@
         console.log(`Level ${i}: ${levels[i]}`);
     }
 
-    tree.rootHash
-
     // find one example
     let findIdx = 'idx3';
     let findHash = hashFunction(dataBufferObj[findIdx]);
