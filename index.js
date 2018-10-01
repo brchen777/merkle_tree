@@ -95,7 +95,7 @@
         /**
          * @typedef {Object} Proof
          * @property {Buffer} hash
-         * @property {0|1|-1} pos 0: self, 1: left, -1: right
+         * @property {1|-1|0} pos 1: left, -1: right, 0: self
          */
         /**
          * Get proof by data hash

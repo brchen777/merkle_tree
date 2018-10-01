@@ -80,6 +80,19 @@
     let result = tree.findOne(findHash).toString('utf8');
     console.log(result);
     ```
+6. Get Proof
+    ```javascript
+    // getProof by hash buffer
+    let proofHash = hashFunction('Hello world!');
+    let result = tree.getProof(proofHash);
+    result = result.map((proof) => {
+        return {
+            hash: proof.hash.toString('hex'),
+            pos: proof.pos
+        }
+    });
+    console.log(result);
+    ```
 ---
 
 ## For maintainer ##
