@@ -47,10 +47,14 @@
 
     // string data
     let dataObj = {
-        idx1: '111_data',
-        idx2: '222_data',
-        idx3: '333_data',
-        idx4: '444_data'
+        idx1: '1_ehxfQyRZb5',
+        idx2: '2_QuytB3zXsu',
+        idx3: '3_FGVLyax30g',
+        idx4: '4_0rnIlkfdi8',
+        idx5: '5_t0oi1UwuPP',
+        idx6: '6_MPL3vyFtWM',
+        idx7: '7_Gk4Py5v5ZE',
+        idx8: '8_KnOAVZMvtB'
     };
 
     // convert string to buffer
@@ -60,40 +64,68 @@
     });
     
     // insert example
-    let levels;
-    tree.insert(Object.values(dataBufferObj));
-    tree.makeTree();
-    levels = tree.getTreeLevels();
-    levels = levels.map(level => level.map(buf => buf.toString('hex')));
-    console.log('\n--- Insert example: ---');
-    console.log('* Tree structure:');
-    for(let i in levels) {
-        console.log(`Level ${i}: ${levels[i]}`);
+    {
+        tree.insert(Object.values(dataBufferObj));
+        tree.makeTree();
+        let levels = tree.getTreeLevels();
+        levels = levels.map(level => level.map(buf => buf.toString('hex')));
+
+        console.log('\n--- Insert example: ---');
+        console.log('* Tree structure:');
+        for(let i in levels) {
+            console.log(`Level ${i}: ${levels[i]}`);
+        }
     }
 
     // find one example
-    let findIdx = 'idx3';
-    let findHash = hashFunction(dataBufferObj[findIdx]);
-    let result = tree.findOne(findHash);
-    console.log('\n--- Find one example: ---');
-    console.log(`* Index: ${findIdx}, Hex_Data: ${findHash.toString('hex')}`);
-    console.log(`* Find result: Utf8_Data: ${result.toString('utf8')}`);
+    {
+        let findIdx = 'idx3';
+        let findHash = hashFunction(dataBufferObj[findIdx]);
+        let result = tree.findOne(findHash);
+
+        console.log('\n--- Find one example: ---');
+        console.log(`* Index: ${findIdx}, Hex_Data: ${findHash.toString('hex')}`);
+        console.log(`* Find result: Utf8_Data: ${result.toString('utf8')}`);
+    }
+
+    // get proof example
+    {
+        let proofIdx = 'idx3';
+        let proofHash = hashFunction(dataBufferObj[proofIdx]);
+        let result = tree.getProof(proofHash);
+        result = result.map((proof) => {
+            return {
+                hash: proof.hash.toString('hex'),
+                pos: proof.pos
+            }
+        });
+
+        console.log('\n--- Get proof example: ---');
+        console.log(`* Index: ${proofIdx}, Hex_Data: ${proofHash.toString('hex')}`);
+        console.log('* Proof:');
+        console.log(result);
+    }
     
     // delete example
-    let delIdx = 'idx3';
-    let delHash = hashFunction(dataBufferObj[delIdx]);
-    tree.delete(delHash);
-    tree.makeTree();
-    levels = tree.getTreeLevels();
-    levels = levels.map(level => level.map(buf => buf.toString('hex')));
-    console.log('\n--- Delete example: ---');
-    console.log(`* Index: ${delIdx}, Hex_Data: ${delHash.toString('hex')}`);
-    console.log('* Tree structure:');
-    for(let i in levels) {
-        console.log(`Level ${i}: ${levels[i]}`);
+    {
+        let delIdx = 'idx3';
+        let delHash = hashFunction(dataBufferObj[delIdx]);
+        tree.delete(delHash);
+        tree.makeTree();
+        let levels = tree.getTreeLevels();
+        levels = levels.map(level => level.map(buf => buf.toString('hex')));
+
+        console.log('\n--- Delete example: ---');
+        console.log(`* Index: ${delIdx}, Hex_Data: ${delHash.toString('hex')}`);
+        console.log('* Tree structure:');
+        for(let i in levels) {
+            console.log(`Level ${i}: ${levels[i]}`);
+        }
     }
 
     // show root hash
-    console.log('\n--- Show root hash example: ---');
-    console.log(`* Root hash: ${tree.rootHash.toString('hex')}`);
+    {
+        console.log('\n--- Show root hash example: ---');
+        console.log(`* Root hash: ${tree.rootHash.toString('hex')}`);
+    }
 })();

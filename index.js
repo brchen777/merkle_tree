@@ -83,13 +83,52 @@
         }
 
         /**
-         * Find leaf data by index buffer
+         * Find leaf data by data hash
          * @param {Buffer} index 
          * @return {Buffer}
          */
-        findOne(index) {
-            let hashStr = __bufferToString(index);
+        findOne(value) {
+            let hashStr = __bufferToString(value);
             return tree.leaves[hashStr];
+        }
+
+        /**
+         * @typedef {Object} Proof
+         * @property {Buffer} hash
+         * @property {0|1|-1} pos 0: self, 1: left, -1: right
+         */
+        /**
+         * Get proof by data hash
+         * @param {Buffer} value
+         * @return {Proof[]}
+         */
+        getProof(value) {
+            if (!tree.isReady) return null;
+            let index = __buffersIndexOf(tree.leaveKeys, value);
+            if (!value || index === -1) return null;
+
+            let proof = [];
+            let levelCnt = tree.levels.length;
+            for (let i = levelCnt - 1; 0 < i; i--) {
+                let isRightNode = ((index % 2) === 1);
+                let indexMove = (isRightNode) ? -1 : 1;
+                let pos = (isRightNode) ? 1 : -1;
+                
+                // if this is an odd end node
+                let levelNodeCnt = tree.levels[i].length;
+                if ((levelNodeCnt % 2 === 1) && (index === levelNodeCnt - 1)) {
+                    indexMove = 0;
+                    pos = 0;
+                }
+
+                proof.push({
+                    hash: tree.levels[i][(index + indexMove)],
+                    pos: pos
+                });
+
+                index = Math.floor(index / 2);
+            }
+            return proof;
         }
 
         /**
@@ -143,7 +182,6 @@
         }
 
         /**
-         * @function getLeafCount
          * @return {number}
          */
         getLeafCount() {
@@ -187,8 +225,19 @@
         return ((__isFunction(newValue)) ? newValue : oldValue);
     }
 
-    function __buffersRemoveItem(array, item) {
-        return array.filter(buffer => !(buffer.equals(item)));
+    function __buffersRemoveItem(array, value) {
+        return array.filter(buffer => !(buffer.equals(value)));
+    }
+
+    function __buffersIndexOf(array, value) {
+        let index = -1;
+        for (let i in array) {
+            if (Buffer.compare(array[i], value) === 0) {
+                index = parseInt(i);
+                break;
+            }
+        }
+        return index;
     }
 
     function __bufferToString(buffer, type = config.__stringType) {
@@ -202,7 +251,6 @@
         const nodes = [];
         const topLevel = tree.levels[0];
         const topLevelCnt = topLevel.length;
-
         for (let x = 0; x < topLevelCnt; x += 2) {
             if (x + 1 <= topLevelCnt - 1) {
                 nodes.push(config.hashFunction(Buffer.concat([topLevel[x], topLevel[x + 1]])));
@@ -211,7 +259,6 @@
                 nodes.push(topLevel[x]);
             }
         }
-
         return nodes;
     }
 })();
